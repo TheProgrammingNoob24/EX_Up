@@ -23,8 +23,7 @@ public class CardBehaviourSummary : MonoBehaviour
     private float currentTime = 0.0f;
     private float currentValue = 0.0f;
 
-    private Vector3 generatePosition = new Vector3(0, 0, -0.5f);
-    private Quaternion generateRotate = Quaternion.Euler(90, 0, 180);
+    private Quaternion generateRotation = Quaternion.Euler(90, 0, 180);
 
     //最初からオブジェクトは生成しておく、そして非表示に
 
@@ -89,7 +88,7 @@ public class CardBehaviourSummary : MonoBehaviour
     }
 
     /// <summary>
-    /// ランダムフィーバータイムにする
+    /// ランダムでフィーバータイムに突入する
     /// </summary>
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
@@ -147,20 +146,20 @@ public class CardBehaviourSummary : MonoBehaviour
         // 画面のアスペクト比の横の大きさを取得
         float aspectRatioWidth = Screen.width / (float)Screen.height;
 
-        // 全体幅
+        // カードの総幅を計算
         float totalWidth = cardCombination.Length * aspectRatioWidth;
 
         // 開始位置
-        float startX = -totalWidth / 2f + aspectRatioWidth / 2f;
+        float startPosX = -totalWidth / 2f + aspectRatioWidth / 2f;
 
         for (int i = 0; i < cardCombination.Length; i++)
         {
             // カードの位置を設定
-            Vector3 cardPosition = new Vector3(startX + aspectRatioWidth * i, 0f, -0.5f);
+            Vector3 cardPosition = new Vector3(startPosX + aspectRatioWidth * i, 0f, -0.5f);
 
             // オブジェクトを配置
             cardCombination[i].transform.position = cardPosition;
-            cardCombination[i].transform.rotation = generateRotate;
+            cardCombination[i].transform.rotation = generateRotation;
 
             Debug.Log($"-配置完了=>i:{i} カード名{cardCombination[i].name}:Pos{cardCombination[i].transform.position}-");
         }
