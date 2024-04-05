@@ -14,9 +14,18 @@ public class GameLoop : MonoBehaviour
 
 
         _cardBehaviourSummary.InitCardInfometion();
-        _cardBehaviourSummary.CardShuffle();
+        _cardBehaviourSummary.TurnMovement();
+        
 
     }
 
+    //await 
+    /*
+     * カードがクリックされたらスコア判定、
+     * ポジションのリセット
+     * 
+     * 
+     * 
+     */
     
 }

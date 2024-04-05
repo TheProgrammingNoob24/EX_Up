@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardBehaviourSummary : MonoBehaviour
 {
 
+    // カードオブジェクト群
     [SerializeField] private GameObject _card_TwoTimes;
     [SerializeField] private GameObject _card_ThreeTimes;
     [SerializeField] private GameObject _card_FiveTimes;
@@ -13,21 +14,26 @@ public class CardBehaviourSummary : MonoBehaviour
     [SerializeField] private GameObject _card_OneThird;
     [SerializeField] private GameObject _card_GameOver;
 
+    // 各周期に対するコンビネーション
     GameObject[] _twoCombinationType;
     GameObject[] _threeCombinationType;
     GameObject[] _fourCombinationType;
     GameObject[] _fiveCombinationType;
     GameObject[] _feverCombinationType;
 
-    private float waveFrequency = 1.0f; // SIN波の周波数
-    private float currentTime = 0.0f;
-    private float currentValue = 0.0f;
+    // 周期に対する変数
+    private int[] _sequenceCycle = { 2, 3, 4, 5, 4, 3 };
+    private int sequencePointer = 0;
 
+    // 整列を行うときの向き
     private Quaternion generateRotation = Quaternion.Euler(90, 0, 180);
 
     //最初からオブジェクトは生成しておく、そして非表示に
 
 
+    /// <summary>
+    /// 各パターンのコンビネーションを設定
+    /// </summary>
     public void InitCardInfometion()
     {
 
@@ -40,12 +46,17 @@ public class CardBehaviourSummary : MonoBehaviour
 
     }
 
-    public void CardShuffle()
+
+    /// <summary>
+    /// カードを混ぜる
+    /// </summary>
+    public void TurnMovement()
     {
-        bool isFever;
+        bool isFever;　//TO DO：GameLoopに変数を用意し格納
         int cardQuantity;
         GameObject[] cardCombination;
 
+        // ランダムでフィーバータイムに突入するかを判定する
         isFever = IsFever();
 
         if (isFever)
@@ -81,8 +92,8 @@ public class CardBehaviourSummary : MonoBehaviour
             }
 
         }
-        Debug.Log($" <color=yellow> Debug.Log{cardCombination.Length} </color>");
-        cardCombination = ShuffleArray(cardCombination);
+        //Debug.Log($" <color=yellow> Debug.Log{cardCombination.Length} </color>");
+        cardCombination = CardShuffle(cardCombination);
 
         EvenlyArrange(cardCombination);
     }
@@ -95,32 +106,31 @@ public class CardBehaviourSummary : MonoBehaviour
     {
         if (Random.value < 0.2f)
         {
-            Debug.Log($" <color=cyan> あたり！</color>");
+            //Debug.Log($" <color=cyan> あたり！</color>");
             return true;
         }
 
-        Debug.Log($" <color=red> はずれ！</color>");
+        //Debug.Log($" <color=red> はずれ！</color>");
         return false;
     }
 
     /// <summary>
-    /// カードを2345432という周期を設定して返すイテレータ関数　IENUMU
+    /// カードを設定した周期で返す関数
     /// </summary>
-    /// <returns>使用カードの枚数を返す</returns>
+    /// <returns>周期のにより決定された現在のカード枚数を返す</returns>
     private int GetNextValue()
     {
-        float sinValue = Mathf.Sin(currentTime * waveFrequency * Mathf.PI * 2);
-        currentValue = Mathf.FloorToInt(Mathf.Lerp(2f, 5f, sinValue / 2f)); // SIN波の値を2から5の範囲にマッピング
-        currentTime += Time.deltaTime;
-        Debug.Log($"<color=blue>GetNextValue()結果：{currentValue}</color>");
-        return Mathf.RoundToInt(currentValue);
+        int returnValue = _sequenceCycle[sequencePointer % _sequenceCycle.Length];
+        sequencePointer++;
+
+        return returnValue;
     }
 
     /// <summary>
     /// カード配列の中身をシャッフル
     /// </summary>
     /// <param name="array"></param>
-    static GameObject[] ShuffleArray(GameObject[] cardCombination)
+    static GameObject[] CardShuffle(GameObject[] cardCombination)
     {
         System.Random rng = new System.Random();
         int n = cardCombination.Length;
@@ -161,7 +171,7 @@ public class CardBehaviourSummary : MonoBehaviour
             cardCombination[i].transform.position = cardPosition;
             cardCombination[i].transform.rotation = generateRotation;
 
-            Debug.Log($"-配置完了=>i:{i} カード名{cardCombination[i].name}:Pos{cardCombination[i].transform.position}-");
+            // Debug.Log($"-配置完了=>i:{i} カード名{cardCombination[i].name}:Pos{cardCombination[i].transform.position}-");
         }
     }
 }
