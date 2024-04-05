@@ -8,7 +8,7 @@ public class GameLoop : MonoBehaviour
     CardBehaviourSummary _cardBehaviourSummary;
 
     // フィーバ状態のFlg
-    bool isFever; // TO DO：GameLoopに変数を用意し格納
+    bool isFever; 
     public bool IsFever { get => isFever; set => isFever = value; }
 
     // カードの組み合わせを記憶する配列
@@ -24,24 +24,20 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
 
-
-
         _cardBehaviourSummary.configureCardCombination();
 
         _cardBehaviourSummary.DecideTurn();
         //TurnLoopProcessing();
-
-
-
 
     }
 
     private void Update()
     {
         //カードポジションを裏面で0に集める
-        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
 
-        _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
+
+        //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
         if (Input.GetKeyDown("space"))
         {
             TurnLoopProcessing();
@@ -52,7 +48,6 @@ public class GameLoop : MonoBehaviour
     /// </summary>
     private void TurnLoopProcessing()
     {
-        
 
         //ターン通知カットイン
         _cardBehaviourSummary.DecideTurn();
@@ -65,6 +60,7 @@ public class GameLoop : MonoBehaviour
         //カード配布
 
     }
+
     //await click
     /*
      * Icardを持つカードがクリックされたらスコア判定、
