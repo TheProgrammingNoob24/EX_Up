@@ -1,38 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EX_Up.InGame.CardBehaviour;
 
-namespace EX_Up.InGame.GameLoop
+public class GameLoop : MonoBehaviour
 {
-    public class GameLoop : MonoBehaviour
+
+    CardBehaviourSummary _cardBehaviourSummary;
+
+    // フィーバ状態のFlg
+    bool isFever; // TO DO：GameLoopに変数を用意し格納
+    public bool IsFever { get => isFever; set => isFever = value; }
+
+    // カードの組み合わせを記憶する配列
+    GameObject[] _selectedCardCombination;
+    public GameObject[] SelectedCardCombination { get => _selectedCardCombination; set => _selectedCardCombination = value; }
+
+    
+
+    private void Awake()
+    {
+        _cardBehaviourSummary = this.GetComponent<CardBehaviourSummary>();
+    }
+    void Start()
     {
 
-        CardBehaviourSummary _cardBehaviourSummary;
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            _cardBehaviourSummary = this.GetComponent<CardBehaviourSummary>();
 
 
-            _cardBehaviourSummary.InitCardInfometion();
-            //カードポジションを0に集める
-            //カットイン
-            //カード配布
-            _cardBehaviourSummary.TurnMovement();
+        _cardBehaviourSummary.configureCardCombination();
+
+        _cardBehaviourSummary.DecideTurn();
+        //TurnLoopProcessing();
 
 
-        }
 
-        //await click
-        /*
-         * Icardを持つカードがクリックされたらスコア判定、
-         * ポジションのリセット
-         * カード配布
-         * カットイン
-         * 
-         */
 
     }
+
+    private void Update()
+    {
+        //カードポジションを裏面で0に集める
+        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);    
+        if (Input.GetKeyDown("space"))
+        {
+            TurnLoopProcessing();
+        }
+    }
+    /// <summary>
+    /// ターンで行う処理
+    /// </summary>
+    private void TurnLoopProcessing()
+    {
+        
+
+        //ターン通知カットイン
+        _cardBehaviourSummary.DecideTurn();
+
+        //カードポジションを裏面で0に集める
+        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+
+        _cardBehaviourSummary.CardShuffle(_selectedCardCombination);
+        //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
+        //カード配布
+
+    }
+    //await click
+    /*
+     * Icardを持つカードがクリックされたらスコア判定、
+     * ポジションのリセット
+     * カード配布
+     * カットイン
+     * 
+     */
+
 }
