@@ -24,21 +24,28 @@ public class CardBehaviourSummary : MonoBehaviour
     GameObject[] _fiveCombinationType;
     GameObject[] _feverCombinationType;
 
-    // 周期に対する変数
+    // 周期に関する変数
     private int[] _sequenceCycle = { 2, 3, 4, 5, 4, 3 };
     private int _sequencePointer = 0;
 
-    // 整列を行うときの向き
+    // 整列を行うときのオブジェクトの向き
     private Quaternion _frontRotation = Quaternion.Euler(90, 0, -180);
     private Quaternion _backRotation = Quaternion.Euler(90, 0, 0);
-
-
-
 
     // アスペクト比の大きさ(※比率)
     private float aspectRatio = Screen.width / Screen.height;
     // アスペクト比の中央
     private float center = Screen.width / Screen.height / 2f + 0.5f;
+
+
+    // 移動処理の共通変数
+    // 目標値に到達するまでのおおよその時間[s]
+    private float _smoothTime = 0.5f;
+    // 最高速度
+    private float _maxSpeed = 100f;
+    // 現在速度(SmoothDampの計算のために必要)
+    private Vector3 _currentVelocity = Vector3.zero;
+
 
     //最初からオブジェクトは生成しておく、そして非表示に
 
@@ -111,7 +118,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
     {
-        if (Random.value < 0.2f)
+        if (Random.value < 0.5f)
         {
             //Debug.Log($" <color=cyan> あたり！</color>");
             return true;
@@ -169,36 +176,35 @@ public class CardBehaviourSummary : MonoBehaviour
 
         for (int i = 0; i < cardCombination.Length; i++)
         {
-            // カードの位置を設定
-            Vector3 cardPosition = new Vector3(startPosX + aspectRatio * i, 0f, -0.5f);
+            // 移動先のカード位置を設定
+            Vector3 targetPosition = new Vector3((startPosX + aspectRatio * i) * 2, 0f, -0.5f);
 
-            // オブジェクトを配置
-            cardCombination[i].transform.position = cardPosition;
-            cardCombination[i].transform.rotation = _frontRotation;
+            Vector3 nowPos = cardCombination[i].transform.position;
+            // targetPosに居ない場合のみ移動処理
+            if (nowPos != targetPosition)
+            {
+                // オブジェクトを移動
+                cardCombination[i].transform.position =
+                    Vector3.SmoothDamp(
+                        nowPos,
+                        targetPosition,
+                        ref _currentVelocity,
+                        _smoothTime * Time.deltaTime,
+                        _maxSpeed);
+                cardCombination[i].transform.rotation = _frontRotation;
 
-            // Debug.Log($"-配置完了=>i:{i} カード名{cardCombination[i].name}:Pos{cardCombination[i].transform.position}-");
+            }
         }
     }
 
-
     /// <summary>
-    /// カードを裏面状態で中央へ凝縮する center
+    /// カードを裏面状態で中央へ移動する center
     /// </summary>
     public void ResetCardPosion(GameObject[] cardCombination)
     {
 
-        // 最終的なカードの位置を設定
-        Vector3 targetPosition = new Vector3(center, center, -0.5f);
-
-        // 目標値に到達するまでのおおよその時間[s]
-        float smoothTime = 0.5f;
-
-        // 最高速度
-        float maxSpeed = 100f;
-
-        // 現在速度(SmoothDampの計算のために必要)
-        Vector3 currentVelocity = new Vector3(0, 0);
-
+        // 移動先のカード位置を設定
+        Vector3 targetPosition = new Vector3(center, center + 2.8f, -0.5f);
 
         for (int i = 0; i < cardCombination.Length; i++)
         {
@@ -212,12 +218,11 @@ public class CardBehaviourSummary : MonoBehaviour
                     Vector3.SmoothDamp(
                         cardCombination[i].transform.position,
                         targetPosition,
-                        ref currentVelocity,
-                        smoothTime * Time.deltaTime,
-                        maxSpeed);
+                        ref _currentVelocity,
+                        _smoothTime * Time.deltaTime,
+                        _maxSpeed);
 
                 cardCombination[i].transform.rotation = _backRotation;
-                Debug.Log($"{i}");
             }
         }
     }

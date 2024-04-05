@@ -39,7 +39,9 @@ public class GameLoop : MonoBehaviour
     private void Update()
     {
         //カードポジションを裏面で0に集める
-        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);    
+        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+
+        _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
         if (Input.GetKeyDown("space"))
         {
             TurnLoopProcessing();
