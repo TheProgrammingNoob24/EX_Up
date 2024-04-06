@@ -6,6 +6,6 @@ using UnityEngine;
 public interface ICard
 {
     // カードが持つスコアを変動させる値
-    int UpdateScoreValue { get; }
+    double UpdateScoreValue { get; }
 
 }

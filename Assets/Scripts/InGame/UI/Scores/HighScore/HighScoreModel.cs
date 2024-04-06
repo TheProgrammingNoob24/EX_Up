@@ -5,10 +5,10 @@ using R3;
 
 public class HighScoreModel
 {
-    private readonly ReactiveProperty<int> _highScore = new();
-    public ReadOnlyReactiveProperty<int> HighScore => _highScore;
+    private readonly ReactiveProperty<double> _highScore = new();
+    public ReadOnlyReactiveProperty<double> HighScore => _highScore;
 
-    public void UpdateHighScore(int UpdateValue)
+    public void UpdateHighScore(double UpdateValue)
     {
         _highScore.Value += UpdateValue;
     }

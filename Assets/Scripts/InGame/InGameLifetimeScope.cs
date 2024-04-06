@@ -4,16 +4,21 @@ using VContainer.Unity;
 
 public class InGameLifetimeScope : LifetimeScope
 {
-    [SerializeField] private ScoreView _scoreView;
-    [SerializeField] private HighScoreView _highScoreView;
+   
     protected override void Configure(IContainerBuilder builder)
     {
-        builder.RegisterEntryPoint<ScorePresenter>();
-        builder.Register<ScoreModel>(Lifetime.Singleton);
-        builder.RegisterComponent(_scoreView);
+        
+        //builder.RegisterComponentInHierarchyGetComponent<Card>();
+        //builder.RegisterComponentInHierarchy<Card>().AsSelf();
+        
 
-        builder.RegisterEntryPoint<HighScorePresenter>();
-        builder.Register<HighScoreModel>(Lifetime.Singleton);
-        builder.RegisterComponent(_highScoreView);
+        builder.Register<ScorePresenter>(Lifetime.Singleton).AsSelf();
+        builder.Register<ScoreModel>(Lifetime.Singleton).AsSelf();
+        builder.RegisterComponentInHierarchy<ScoreView>().AsSelf();
+
+
+        /* builder.RegisterEntryPoint<HighScorePresenter>();
+         builder.Register<HighScoreModel>(Lifetime.Singleton);
+         builder.RegisterComponentInHierarchy<HighScoreView>().AsSelf();*/
     }
 }
