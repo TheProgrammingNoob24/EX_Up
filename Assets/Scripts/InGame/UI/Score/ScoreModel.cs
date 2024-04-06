@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using R3;
 
-public class HighScoreModel
+public class ScoreModel
 {
     // ‚±‚Á‚¿‚ª–{‘Ì
     private readonly ReactiveProperty<int> _score = new();
