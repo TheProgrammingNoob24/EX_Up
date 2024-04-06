@@ -14,17 +14,18 @@ public class Card : MonoBehaviour, ICard, IPointerClickHandler
     ScorePresenter _scorePresenter;
 
     [Inject]
-    public Card(
+    public void Inject(
         ScorePresenter scorePresenter
         )
     {
         _scorePresenter = scorePresenter;
     }
 
-
     public void OnPointerClick(PointerEventData eventData)
     {
+
         _scorePresenter.UpdateScore(UpdateScoreValue);
     }
+
 
 }

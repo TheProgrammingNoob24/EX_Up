@@ -20,7 +20,7 @@ public class ScorePresenter
 
     public void UpdateScore(double UpdateScoreValue)
     {
-        Debug.LogAssertion("aaaaa");
+        Debug.Log("aaaaa");
         _scoreModel.UpdateScore(UpdateScoreValue);
         _updatedScoreValue = _scoreModel.GetScoreValue();
         _scoreView.UpdateText(_updatedScoreValue);

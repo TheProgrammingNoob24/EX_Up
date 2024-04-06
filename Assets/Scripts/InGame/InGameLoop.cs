@@ -33,8 +33,10 @@ public class InGameLoop : MonoBehaviour
 
     private void Update()
     {
+
+        _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
         //カードポジションを裏面で0に集める
-        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
 
 
         //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);

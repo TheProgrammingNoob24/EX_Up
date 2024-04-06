@@ -241,6 +241,13 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  _card_TwoTimes: {fileID: 626997504}
+  _card_ThreeTimes: {fileID: 619367649}
+  _card_FiveTimes: {fileID: 1767339108}
+  _card_TenTimes: {fileID: 1993103901}
+  _card_OneHalf: {fileID: 1658652595}
+  _card_OneThird: {fileID: 325119160}
+  _card_GameOver: {fileID: 966202493}
 --- !u!1 &311478682
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,11 +279,11 @@ Transform:
   m_Children:
   - {fileID: 626997503}
   - {fileID: 619367648}
+  - {fileID: 1767339107}
   - {fileID: 1993103900}
   - {fileID: 1658652594}
-  - {fileID: 966202492}
-  - {fileID: 1767339107}
   - {fileID: 325119159}
+  - {fileID: 966202492}
   m_Father: {fileID: 1230895479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &325119157
