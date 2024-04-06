@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EX_Up.UIAnimations
 {
-    public class UIAnimations : MonoBehaviour
+    public class UIAnimation : MonoBehaviour
     {
         //カットイン演出
 

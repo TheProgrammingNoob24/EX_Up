@@ -6,7 +6,7 @@ using UnityEngine;
 public class CardBehaviourSummary : MonoBehaviour
 {
 
-    GameLoop _gameLoop;
+    InGameLoop _inGameLoop;
 
     // カードオブジェクト群
     [SerializeField] private GameObject _card_TwoTimes;
@@ -52,7 +52,7 @@ public class CardBehaviourSummary : MonoBehaviour
 
     private void Awake()
     {
-        _gameLoop = this.GetComponent<GameLoop>();
+        _inGameLoop = this.GetComponent<InGameLoop>();
     }
     /// <summary>
     /// 各パターンのコンビネーションを設定
@@ -76,35 +76,35 @@ public class CardBehaviourSummary : MonoBehaviour
     {
 
         // ランダムでフィーバータイムに突入するかを判定する
-        _gameLoop.IsFever = IsFever();
+        _inGameLoop.IsFever = IsFever();
 
-        if (_gameLoop.IsFever)
+        if (_inGameLoop.IsFever)
         {
-            _gameLoop.SelectedCardCombination = _feverCombinationType;
+            _inGameLoop.SelectedCardCombination = _feverCombinationType;
         }
         else
         {
             switch (GetNextValue())
             {
                 case 2:
-                    _gameLoop.SelectedCardCombination = _twoCombinationType;
+                    _inGameLoop.SelectedCardCombination = _twoCombinationType;
                     break;
 
                 case 3:
-                    _gameLoop.SelectedCardCombination = _threeCombinationType;
+                    _inGameLoop.SelectedCardCombination = _threeCombinationType;
                     break;
 
                 case 4:
-                    _gameLoop.SelectedCardCombination = _fourCombinationType;
+                    _inGameLoop.SelectedCardCombination = _fourCombinationType;
                     break;
 
                 case 5:
-                    _gameLoop.SelectedCardCombination = _fiveCombinationType;
+                    _inGameLoop.SelectedCardCombination = _fiveCombinationType;
                     break;
 
                 default:
                     Debug.Log($" <color=blue> エラー </color>");
-                    _gameLoop.SelectedCardCombination = _feverCombinationType;
+                    _inGameLoop.SelectedCardCombination = _feverCombinationType;
                     break;
             }
 
