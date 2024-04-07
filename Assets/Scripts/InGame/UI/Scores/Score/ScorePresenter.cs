@@ -20,11 +20,18 @@ public class ScorePresenter
 
     public void UpdateScore(double UpdateScoreValue)
     {
-        Debug.Log("aaaaa");
         _scoreModel.UpdateScore(UpdateScoreValue);
         _updatedScoreValue = _scoreModel.GetScoreValue();
+        Debug.Log("bbbb");
         _scoreView.UpdateText(_updatedScoreValue);
+        Debug.Log("cccc");
     }
 
+    public void ResetScore()
+    {
+        _scoreModel.ResetScore();
+        double scoreValue = _scoreModel.GetScoreValue();
+        _scoreView.ReseScoreText(scoreValue);
 
+    }
 }

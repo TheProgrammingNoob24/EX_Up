@@ -23,7 +23,7 @@ public class Card : MonoBehaviour, ICard, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-
+        Debug.Log($" <color=red> {_multipleScoreValue}ÅI</color>");
         _scorePresenter.UpdateScore(UpdateScoreValue);
     }
 

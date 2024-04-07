@@ -9,8 +9,13 @@ public class ScoreView : MonoBehaviour
 
     public GameObject ScoreText { get => _scoreText; set => _scoreText = value; }
 
-    public void UpdateText(double multipleValue)
+    public void UpdateText(double setValue)
     {
-        _scoreText.GetComponent<TextMeshPro>().text = multipleValue.ToString();
+        _scoreText.GetComponent<TextMeshPro>().text = setValue.ToString();
+    }
+
+    public void ReseScoreText(double setValue)
+    {
+        _scoreText.GetComponent<TextMeshPro>().text = setValue.ToString();
     }
 }

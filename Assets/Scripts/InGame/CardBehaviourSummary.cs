@@ -118,7 +118,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
     {
-        if (Random.value < 0.1f)
+        if (Random.value < 1.1f)
         {
             //Debug.Log($" <color=cyan> あたり！</color>");
             return true;

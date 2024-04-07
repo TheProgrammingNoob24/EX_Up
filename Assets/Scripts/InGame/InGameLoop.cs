@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 public class InGameLoop : MonoBehaviour
 {
 
     CardBehaviourSummary _cardBehaviourSummary;
-
+    ScorePresenter _scorePresenter;
     // フィーバ状態のFlg
     bool isFever; 
     public bool IsFever { get => isFever; set => isFever = value; }
@@ -15,9 +16,15 @@ public class InGameLoop : MonoBehaviour
     GameObject[] _selectedCardCombination;
     public GameObject[] SelectedCardCombination { get => _selectedCardCombination; set => _selectedCardCombination = value; }
 
-    
+    [Inject]
+    public void Inject(
+       ScorePresenter scorePresenter
+       )
+    {
+        _scorePresenter = scorePresenter;
+    }
 
-    private void Awake()
+        private void Awake()
     {
         _cardBehaviourSummary = this.GetComponent<CardBehaviourSummary>();
     }
@@ -26,6 +33,7 @@ public class InGameLoop : MonoBehaviour
 
         _cardBehaviourSummary.configureCardCombination();
 
+        _scorePresenter.ResetScore();
         _cardBehaviourSummary.DecideTurn();
         //TurnLoopProcessing();
 

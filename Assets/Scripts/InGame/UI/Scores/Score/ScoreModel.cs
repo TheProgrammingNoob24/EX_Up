@@ -14,14 +14,15 @@ public class ScoreModel
         return Score.CurrentValue;
     }
 
-    public void ResetScore(double multipleValue)
+    public void ResetScore()
     {
         _score.Value = 100;
     }
 
-    public void UpdateScore(double multipleValue)
+    public void UpdateScore(double multipledValue)
     {
-        _score.Value *= multipleValue;
+        Debug.Log("aaaaa");
+        _score.Value *= multipledValue;
     }
 
 }

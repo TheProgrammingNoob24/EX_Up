@@ -6,27 +6,25 @@ public class InGameLifetimeScope : LifetimeScope
 {
 
     [SerializeField] Card _card_TwoTimes;
-    /*[SerializeField] Card _card_ThreeTimes;
+    [SerializeField] Card _card_ThreeTimes;
     [SerializeField] Card _card_FiveTimes;
     [SerializeField] Card _card_TenTimes;
     [SerializeField] Card _card_OneHalf;
     [SerializeField] Card _card_OneThird;
-    [SerializeField] Card _card_GameOver;*/
+    [SerializeField] Card _card_GameOver;
 
 
 
 
     protected override void Configure(IContainerBuilder builder)
     {
-        
-        builder.RegisterComponent(_card_TwoTimes).AsSelf();
-       /* builder.RegisterComponent(_card_ThreeTimes).AsSelf();
-        builder.RegisterComponent(_card_FiveTimes).AsSelf();
-        builder.RegisterComponent(_card_TenTimes).AsSelf();
-        builder.RegisterComponent(_card_OneHalf).AsSelf();
-        builder.RegisterComponent(_card_OneThird).AsSelf();
-        builder.RegisterComponent(_card_GameOver).AsSelf();*/
-        
+        builder.RegisterComponentInNewPrefab(_card_TwoTimes, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_ThreeTimes, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_FiveTimes, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_TenTimes, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_OneHalf, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_OneThird, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_card_GameOver, Lifetime.Scoped);
 
         builder.Register<ScorePresenter>(Lifetime.Singleton).AsSelf();
         builder.Register<ScoreModel>(Lifetime.Singleton).AsSelf();
