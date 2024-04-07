@@ -22,9 +22,7 @@ public class ScorePresenter
     {
         _scoreModel.UpdateScore(UpdateScoreValue);
         _updatedScoreValue = _scoreModel.GetScoreValue();
-        Debug.Log("bbbb");
         _scoreView.UpdateText(_updatedScoreValue);
-        Debug.Log("cccc");
     }
 
     public void ResetScore()

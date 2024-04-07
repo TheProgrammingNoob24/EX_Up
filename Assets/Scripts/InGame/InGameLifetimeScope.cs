@@ -5,6 +5,8 @@ using VContainer.Unity;
 public class InGameLifetimeScope : LifetimeScope
 {
 
+    [SerializeField] InGameLoop _inGameLoop;
+
     [SerializeField] Card _card_TwoTimes;
     [SerializeField] Card _card_ThreeTimes;
     [SerializeField] Card _card_FiveTimes;
@@ -18,6 +20,7 @@ public class InGameLifetimeScope : LifetimeScope
 
     protected override void Configure(IContainerBuilder builder)
     {
+        builder.RegisterComponentInNewPrefab(_inGameLoop, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_TwoTimes, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_ThreeTimes, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_FiveTimes, Lifetime.Scoped);
