@@ -9,6 +9,7 @@ public class ScorePresenter
 
     ScoreModel _scoreModel;
     ScoreView _scoreView;
+
     public ScorePresenter(
         ScoreModel scoreModel,
         ScoreView scoreView

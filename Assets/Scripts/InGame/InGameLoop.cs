@@ -8,8 +8,9 @@ public class InGameLoop : MonoBehaviour
 
     CardBehaviourSummary _cardBehaviourSummary;
     ScorePresenter _scorePresenter;
+    CutInPresenter _cutInPresenter;
     // フィーバ状態のFlg
-    bool isFever; 
+    bool isFever;
     public bool IsFever { get => isFever; set => isFever = value; }
 
     // カードの組み合わせを記憶する配列
@@ -18,13 +19,15 @@ public class InGameLoop : MonoBehaviour
 
     [Inject]
     public void Inject(
-       ScorePresenter scorePresenter
+       ScorePresenter scorePresenter,
+        CutInPresenter cutInPresenter
        )
     {
         _scorePresenter = scorePresenter;
+        _cutInPresenter = cutInPresenter;
     }
 
-        private void Awake()
+    private void Awake()
     {
         _cardBehaviourSummary = this.GetComponent<CardBehaviourSummary>();
     }
@@ -35,6 +38,8 @@ public class InGameLoop : MonoBehaviour
 
         _scorePresenter.ResetScore();
         _cardBehaviourSummary.DecideTurn();
+        var a = "変えたよ";
+        _cutInPresenter.CutIn(a);
         //TurnLoopProcessing();
 
     }

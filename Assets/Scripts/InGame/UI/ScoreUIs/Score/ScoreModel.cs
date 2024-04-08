@@ -16,12 +16,12 @@ public class ScoreModel
 
     public void ResetScore()
     {
-        // «—ˆ“I‚ÉL‹’®Ÿ‘æ‚Å‰Šú’l‚ğ•Ï‚¦‚é
         _score.Value = 100;
     }
 
     public void UpdateScore(double multipledValue)
     {
+        Debug.Log("aaaaa");
         _score.Value *= multipledValue;
     }
 

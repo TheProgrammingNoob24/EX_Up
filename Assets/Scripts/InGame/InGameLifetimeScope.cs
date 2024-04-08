@@ -6,7 +6,7 @@ public class InGameLifetimeScope : LifetimeScope
 {
 
     [SerializeField] InGameLoop _inGameLoop;
-
+    [SerializeField] UIAnimation _uiAnimation;
     [SerializeField] Card _card_TwoTimes;
     [SerializeField] Card _card_ThreeTimes;
     [SerializeField] Card _card_FiveTimes;
@@ -15,12 +15,10 @@ public class InGameLifetimeScope : LifetimeScope
     [SerializeField] Card _card_OneThird;
     [SerializeField] Card _card_GameOver;
 
-
-
-
     protected override void Configure(IContainerBuilder builder)
     {
-        builder.RegisterComponentInNewPrefab(_inGameLoop, Lifetime.Scoped);
+        builder.RegisterComponentInNewPrefab(_inGameLoop, Lifetime.Singleton);
+        builder.RegisterComponentInNewPrefab(_uiAnimation, Lifetime.Singleton);
         builder.RegisterComponentInNewPrefab(_card_TwoTimes, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_ThreeTimes, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_FiveTimes, Lifetime.Scoped);
@@ -33,9 +31,8 @@ public class InGameLifetimeScope : LifetimeScope
         builder.Register<ScoreModel>(Lifetime.Singleton).AsSelf();
         builder.RegisterComponentInHierarchy<ScoreView>().AsSelf();
 
-
-        /* builder.RegisterEntryPoint<HighScorePresenter>();
-         builder.Register<HighScoreModel>(Lifetime.Singleton);
-         builder.RegisterComponentInHierarchy<HighScoreView>().AsSelf();*/
+        builder.Register<CutInPresenter>(Lifetime.Singleton).AsSelf();
+        builder.RegisterComponentInHierarchy<CutInView>().AsSelf();
+        
     }
 }
