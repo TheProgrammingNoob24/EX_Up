@@ -169,9 +169,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 245094031}
-  - component: {fileID: 245094033}
-  - component: {fileID: 245094032}
   - component: {fileID: 245094034}
+  - component: {fileID: 245094035}
   m_Layer: 0
   m_Name: GameManeger
   m_TagString: Untagged
@@ -194,37 +193,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &245094032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245094030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99b2b7583b7ce3c4c891c0dfb6bbe2dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _card_TwoTimes: {fileID: 626997502}
-  _card_ThreeTimes: {fileID: 619367647}
-  _card_FiveTimes: {fileID: 1767339106}
-  _card_TenTimes: {fileID: 1993103899}
-  _card_OneHalf: {fileID: 1658652593}
-  _card_OneThird: {fileID: 325119158}
-  _card_GameOver: {fileID: 966202491}
---- !u!114 &245094033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245094030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e37b393c502b0347806e88756a36dcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &245094034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,10 +218,9 @@ MonoBehaviour:
   - {fileID: 1658652593}
   - {fileID: 325119158}
   - {fileID: 966202491}
-  - {fileID: 966202491}
   - {fileID: 1735014005}
-  _inGameLoop: {fileID: 245094033}
   _uiAnimation: {fileID: 483961270}
+  _cardBehaviourSummary: {fileID: 245094035}
   _card_TwoTimes: {fileID: 626997504}
   _card_ThreeTimes: {fileID: 619367649}
   _card_FiveTimes: {fileID: 1767339108}
@@ -261,7 +228,25 @@ MonoBehaviour:
   _card_OneHalf: {fileID: 1658652595}
   _card_OneThird: {fileID: 325119160}
   _card_GameOver: {fileID: 966202493}
-  _cutInView: {fileID: 1735014009}
+--- !u!114 &245094035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245094030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99b2b7583b7ce3c4c891c0dfb6bbe2dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _card_TwoTimes: {fileID: 626997502}
+  _card_ThreeTimes: {fileID: 619367647}
+  _card_FiveTimes: {fileID: 1767339106}
+  _card_TenTimes: {fileID: 1993103899}
+  _card_OneHalf: {fileID: 1658652593}
+  _card_OneThird: {fileID: 325119158}
+  _card_GameOver: {fileID: 966202491}
 --- !u!1 &311478682
 GameObject:
   m_ObjectHideFlags: 0

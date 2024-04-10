@@ -21,7 +21,6 @@ public class ScoreModel
 
     public void UpdateScore(double multipledValue)
     {
-        Debug.Log("aaaaa");
         _score.Value *= multipledValue;
     }
 

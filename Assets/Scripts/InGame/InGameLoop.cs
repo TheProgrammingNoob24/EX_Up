@@ -2,62 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
+using Cysharp.Threading.Tasks;
+using VContainer.Unity;
 
-public class InGameLoop : MonoBehaviour
+public class InGameLoop : IStartable, ITickable
 {
 
     CardBehaviourSummary _cardBehaviourSummary;
     ScorePresenter _scorePresenter;
     CutInPresenter _cutInPresenter;
+
     // フィーバ状態のFlg
-    bool isFever;
-    public bool IsFever { get => isFever; set => isFever = value; }
+    bool _isFever;
+    public bool IsFever { get => _isFever; set => _isFever = value; }
 
     // カードの組み合わせを記憶する配列
     GameObject[] _selectedCardCombination;
     public GameObject[] SelectedCardCombination { get => _selectedCardCombination; set => _selectedCardCombination = value; }
 
     [Inject]
-    public void Inject(
+    public InGameLoop(
        ScorePresenter scorePresenter,
-        CutInPresenter cutInPresenter
+       CutInPresenter cutInPresenter,
+       CardBehaviourSummary cardBehaviourSummary
        )
     {
         _scorePresenter = scorePresenter;
         _cutInPresenter = cutInPresenter;
+        _cardBehaviourSummary = cardBehaviourSummary;
     }
 
-    private void Awake()
-    {
-        _cardBehaviourSummary = this.GetComponent<CardBehaviourSummary>();
-    }
-    void Start()
+    void IStartable.Start()
     {
 
         _cardBehaviourSummary.configureCardCombination();
 
         _scorePresenter.ResetScore();
-        _cardBehaviourSummary.DecideTurn();
-        var a = "変えたよ";
+        (_isFever, _selectedCardCombination) = _cardBehaviourSummary.DecideTurn(IsFever, SelectedCardCombination);
+
+        var a = "Change!!";
         _cutInPresenter.CutIn(a);
         //TurnLoopProcessing();
 
     }
 
-    private void Update()
+    void ITickable.Tick()
     {
-
         _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
         //カードポジションを裏面で0に集める
         //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
 
-
+        // await _card_FiveTimes.;
         //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
         if (Input.GetKeyDown("space"))
         {
             TurnLoopProcessing();
         }
     }
+
     /// <summary>
     /// ターンで行う処理
     /// </summary>
@@ -65,7 +67,7 @@ public class InGameLoop : MonoBehaviour
     {
 
         //ターン通知カットイン
-        _cardBehaviourSummary.DecideTurn();
+        _cardBehaviourSummary.DecideTurn(IsFever, _selectedCardCombination);
 
         //カードポジションを裏面で0に集める
         _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
@@ -76,7 +78,16 @@ public class InGameLoop : MonoBehaviour
 
     }
 
-    //await click
+    /* partial async UniTaskVoid click() {
+
+
+     }*/
+
+
+
+
+
+
     /*
      * Icardを持つカードがクリックされたらスコア判定、
      * ポジションのリセット

@@ -10,9 +10,6 @@ public class CutInView : MonoBehaviour
 
     public void UpdateText(string newText)
     {
-
-        Debug.Log(_cutInText.GetComponent<RectTransform>().transform.position);
-        Debug.Log(_cutInText.GetComponent<TextMeshProUGUI>());
         _cutInText.GetComponent<TextMeshProUGUI>().text = newText;
     }
 }

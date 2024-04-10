@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using VContainer;
 
 public class CardBehaviourSummary : MonoBehaviour
 {
-
-    InGameLoop _inGameLoop;
 
     // カードオブジェクト群
     [SerializeField] private GameObject _card_TwoTimes;
@@ -47,13 +46,6 @@ public class CardBehaviourSummary : MonoBehaviour
     private Vector3 _currentVelocity = Vector3.zero;
 
 
-    //最初からオブジェクトは生成しておく、そして非表示に
-
-
-    private void Awake()
-    {
-        _inGameLoop = this.GetComponent<InGameLoop>();
-    }
     /// <summary>
     /// 各パターンのコンビネーションを設定
     /// </summary>
@@ -72,44 +64,43 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <summary>
     /// 現在のターン数を決定
     /// </summary>
-    public void DecideTurn()
+    public (bool, GameObject[]) DecideTurn(bool isFever, GameObject[] selectedCardCombination)
     {
 
         // ランダムでフィーバータイムに突入するかを判定する
-        _inGameLoop.IsFever = IsFever();
+        isFever = IsFever();
 
-        if (_inGameLoop.IsFever)
+        if (isFever)
         {
-            _inGameLoop.SelectedCardCombination = _feverCombinationType;
+            selectedCardCombination = _feverCombinationType;
         }
         else
         {
             switch (GetNextValue())
             {
                 case 2:
-                    _inGameLoop.SelectedCardCombination = _twoCombinationType;
+                    selectedCardCombination = _twoCombinationType;
                     break;
 
                 case 3:
-                    _inGameLoop.SelectedCardCombination = _threeCombinationType;
+                    selectedCardCombination = _threeCombinationType;
                     break;
 
                 case 4:
-                    _inGameLoop.SelectedCardCombination = _fourCombinationType;
+                    selectedCardCombination = _fourCombinationType;
                     break;
 
                 case 5:
-                    _inGameLoop.SelectedCardCombination = _fiveCombinationType;
+                    selectedCardCombination = _fiveCombinationType;
                     break;
 
                 default:
                     Debug.Log($" <color=blue> エラー </color>");
-                    _inGameLoop.SelectedCardCombination = _feverCombinationType;
+                    selectedCardCombination = _feverCombinationType;
                     break;
             }
-
         }
-
+        return (isFever, selectedCardCombination);
     }
 
     /// <summary>
@@ -118,7 +109,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
     {
-        if (Random.value < 1.1f)
+        if (Random.value < 0.6f)
         {
             //Debug.Log($" <color=cyan> あたり！</color>");
             return true;
@@ -167,7 +158,6 @@ public class CardBehaviourSummary : MonoBehaviour
     /// </summary>
     public void EvenlyArrange(GameObject[] cardCombination)
     {
-
         // カードの総幅を計算
         float totalWidth = cardCombination.Length * aspectRatio;
 
