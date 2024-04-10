@@ -1,13 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VContainer;
+using R3;
+using R3.Triggers;
 using Cysharp.Threading.Tasks;
+using VContainer;
 using VContainer.Unity;
+using System.Threading;
+
 
 public class InGameLoop : IStartable, ITickable
 {
-
+    private readonly CompositeDisposable _disposable = new();
+    private CancellationTokenSource _cancellationTokenSource = new();
     CardBehaviourSummary _cardBehaviourSummary;
     ScorePresenter _scorePresenter;
     CutInPresenter _cutInPresenter;
@@ -58,6 +64,24 @@ public class InGameLoop : IStartable, ITickable
         {
             TurnLoopProcessing();
         }
+
+
+        //試しに一個とってみる
+
+        //, cancellationToken: cancellation
+        if (Input.GetMouseButtonUp(0))
+        {
+            anyClickedObject();// こっちはforeachしてるから複数個取れている？
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            Debug.Log($"ミギクリ！");
+            //これは一個だけ
+        }
+
+        //_selectedCardCombination.Up
+
     }
 
     /// <summary>
@@ -78,6 +102,31 @@ public class InGameLoop : IStartable, ITickable
 
     }
 
+    private void anyClickedObject()
+    {
+        foreach (GameObject i in _selectedCardCombination)
+        {
+            var card = i.GetComponent<Card>();
+
+            card.OnMouseUpAsObservable().TakeLast(1)
+                .Subscribe(_ =>
+            {
+                Debug.Log($"{card.name}のクリック検知したヨ");
+            });
+        }
+
+
+        /* for (int i = 0; i < _selectedCardCombination.Length; i++)
+         {
+             var a = _selectedCardCombination[i].GetComponent<Card>();
+
+             a.OnMouseUpAsObservable().Subscribe(_ =>
+             {
+                 Debug.Log($"{a.name}のクリック検知したヨ");
+             });
+         }*/
+
+    }
     /* partial async UniTaskVoid click() {
 
 
@@ -95,5 +144,9 @@ public class InGameLoop : IStartable, ITickable
      * カットイン
      * 
      */
-
+    public void Dispose()
+    {
+        _disposable?.Dispose();
+        _cancellationTokenSource?.Dispose();
+    }
 }

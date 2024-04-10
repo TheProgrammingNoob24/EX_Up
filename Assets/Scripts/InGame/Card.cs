@@ -63,11 +63,11 @@ public class Card : MonoBehaviour, ICard, IPointerEnterHandler, IPointerExitHand
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
-        OnOnPointerUpCardAnimation();
+        OnPointerUpCardAnimation();
         _scorePresenter.UpdateScore(UpdateScoreValue);
     }
 
-    private void OnOnPointerUpCardAnimation()
+    private void OnPointerUpCardAnimation()
     {
         var transform = this.GetComponent<Transform>();
         LMotion.Create(transform.localScale, _reductionAnimationScale, 0.1f).BindToLocalScale(transform);

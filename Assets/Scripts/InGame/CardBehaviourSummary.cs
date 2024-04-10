@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using VContainer;
+using R3;
+using R3.Triggers;
 
 public class CardBehaviourSummary : MonoBehaviour
 {
@@ -58,7 +60,6 @@ public class CardBehaviourSummary : MonoBehaviour
         _fourCombinationType = new GameObject[] { _card_ThreeTimes, _card_FiveTimes, _card_OneHalf, _card_OneThird };
         _fiveCombinationType = new GameObject[] { _card_ThreeTimes, _card_FiveTimes, _card_OneHalf, _card_OneThird, _card_GameOver };
         _feverCombinationType = new GameObject[] { _card_FiveTimes, _card_TenTimes, _card_OneHalf, _card_OneThird, _card_GameOver };
-
     }
 
     /// <summary>
