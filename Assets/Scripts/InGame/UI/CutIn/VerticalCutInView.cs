@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CutInView : MonoBehaviour
+public class VerticalCutInView : MonoBehaviour
 {
 
     [SerializeField] private GameObject _cutInText;

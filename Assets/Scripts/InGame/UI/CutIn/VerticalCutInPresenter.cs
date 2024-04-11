@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
-public class CutInPresenter
+public class VerticalCutInPresenter
 {
     UIAnimation _uiAnimation;
-    CutInView _cutInView;
+    VerticalCutInView _cutInView;
 
-    public CutInPresenter(
-      CutInView cutInView,
+    public VerticalCutInPresenter(
+      VerticalCutInView cutInView,
       UIAnimation uiAnimation
       )
     {

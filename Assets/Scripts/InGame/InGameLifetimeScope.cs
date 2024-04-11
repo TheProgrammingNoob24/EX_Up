@@ -33,8 +33,8 @@ public class InGameLifetimeScope : LifetimeScope
         builder.Register<ScoreModel>(Lifetime.Singleton).AsSelf();
         builder.RegisterComponentInHierarchy<ScoreView>().AsSelf();
 
-        builder.Register<CutInPresenter>(Lifetime.Singleton).AsSelf();
-        builder.RegisterComponentInHierarchy<CutInView>().AsSelf();
+        builder.Register<VerticalCutInPresenter>(Lifetime.Singleton).AsSelf();
+        builder.RegisterComponentInHierarchy<VerticalCutInView>().AsSelf();
         
     }
 }

@@ -17,12 +17,13 @@ public class InGameLoop : IStartable, ITickable
     private CancellationTokenSource _cancellationTokenSource = new();
     CardBehaviourSummary _cardBehaviourSummary;
     ScorePresenter _scorePresenter;
-    CutInPresenter _cutInPresenter;
+    VerticalCutInPresenter _cutInPresenter;
 
-    bool _selected = false;
-    // フィーバ状態のFlg
+    bool _gameOver;
+    bool _cardSelected = false;
     bool _isFever;
-    public bool IsFever { get => _isFever; set => _isFever = value; }
+
+    string _nowRoundCount;
 
     GameObject[] _allCardObjects;
     // カードの組み合わせを記憶する配列
@@ -32,7 +33,7 @@ public class InGameLoop : IStartable, ITickable
     [Inject]
     public InGameLoop(
        ScorePresenter scorePresenter,
-       CutInPresenter cutInPresenter,
+       VerticalCutInPresenter cutInPresenter,
        CardBehaviourSummary cardBehaviourSummary
        )
     {
@@ -49,57 +50,49 @@ public class InGameLoop : IStartable, ITickable
 
         _scorePresenter.ResetScore();
 
-        (_isFever, _selectedCardCombination) = _cardBehaviourSummary.DecideTurn(IsFever, SelectedCardCombination);
-
-        var a = "Change!!";
-        _cutInPresenter.CutIn(a);
-        //TurnLoopProcessing();
-        
     }
 
     async void ITickable.Tick()
     {
-        _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
-        
 
-        // await _card_FiveTimes.;
-        //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
-        if (Input.GetKeyDown("space"))
+        if (_gameOver)
         {
-            TurnLoopProcessing();
+            // ターンを決定
+            (_isFever, _selectedCardCombination) = _cardBehaviourSummary.DecideTurn(_isFever, SelectedCardCombination);
+
+
+            var nowRoundText = SetRoundText();
+
+            //ターン通知カットイン
+            _cutInPresenter.CutIn(nowRoundText);
+
+            // 決定されたカードの組み合わせをシャッフル
+            _cardBehaviourSummary.CardShuffle(_selectedCardCombination);
+
+            // シャッフルされたカードを配置
+            _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
+
+
+
+            // カードが選択された TO DO:↓メソッド化できない？　試したが、難しそう
+            await UniTask.WaitUntil(() => _cardSelected);
+
+            // 横カットイン
+
+            //スコア加算
+
+
+            //カードポジションを裏面で0に集める
+            //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+
+            //_selectedCardCombination.Up
+
         }
 
-        // カードが選択された TO DO:↓メソッド化できない？　試したが、難しそう
-        await UniTask.WaitUntil(() => _selected);
-
-        // 横カットイン
-
-        //スコア加算
-
-        //カードポジションを裏面で0に集める
-        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
-
-        //_selectedCardCombination.Up
 
     }
 
-    /// <summary>
-    /// ターンで行う処理
-    /// </summary>
-    private void TurnLoopProcessing()
-    {
 
-        //ターン通知カットイン
-        _cardBehaviourSummary.DecideTurn(IsFever, _selectedCardCombination);
-
-        //カードポジションを裏面で0に集める
-        _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
-
-        _cardBehaviourSummary.CardShuffle(_selectedCardCombination);
-        //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
-        //カード配布
-
-    }
 
     private void InitRegistAllCardObjects()
     {
@@ -107,35 +100,26 @@ public class InGameLoop : IStartable, ITickable
         {
             var card = i.GetComponent<Card>();
 
-           var o = card.OnMouseUpAsObservable()
-                .Subscribe(_ =>
-            {
-                Debug.Log($"{card.name}のクリック検知したヨ");
-                _selected = true;
-            });
+            var o = card.OnMouseUpAsObservable()
+                 .Subscribe(_ =>
+             {
+                 Debug.Log($"{card.name}のクリック検知したヨ");
+                 _cardSelected = true;
+             });
         }
 
     }
-   
 
 
-    /* partial async UniTaskVoid click() {
+    private string SetRoundText()
+    {
+        if (_isFever)
+        {
+            return "Fever!";
+        }
 
-
-     }*/
-
-
-
-
-
-
-    /*
-     * Icardを持つカードがクリックされたらスコア判定、
-     * ポジションのリセット
-     * カード配布
-     * カットイン
-     * 
-     */
+        return "Round" + _nowRoundCount;
+    }
     public void Dispose()
     {
         _disposable?.Dispose();
