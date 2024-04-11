@@ -18,7 +18,11 @@ public class CardBehaviourSummary : MonoBehaviour
     [SerializeField] private GameObject _card_OneThird;
     [SerializeField] private GameObject _card_GameOver;
 
-    // 各周期に対するコンビネーション
+
+    // 全カードオブジェクトの組み合わせ
+    GameObject[] _allCardCombination;
+
+    // 各周期に対する組み合わせ
     GameObject[] _twoCombinationType;
     GameObject[] _threeCombinationType;
     GameObject[] _fourCombinationType;
@@ -48,12 +52,19 @@ public class CardBehaviourSummary : MonoBehaviour
     private Vector3 _currentVelocity = Vector3.zero;
 
 
+    public GameObject[] configureAllCardCombination()
+    {
+        _allCardCombination = new GameObject[] { _card_TwoTimes, _card_ThreeTimes, _card_FiveTimes, _card_TenTimes, _card_OneHalf, _card_OneThird, _card_GameOver };
+        return _allCardCombination;
+    }
+
+
     /// <summary>
     /// 各パターンのコンビネーションを設定
     /// </summary>
     public void configureCardCombination()
     {
-
+        
         // 各パターンの組み合わせを設定
         _twoCombinationType = new GameObject[] { _card_TwoTimes, _card_OneHalf };
         _threeCombinationType = new GameObject[] { _card_TwoTimes, _card_ThreeTimes, _card_OneHalf };

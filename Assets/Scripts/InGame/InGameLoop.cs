@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using VContainer;
 using VContainer.Unity;
 using System.Threading;
+using Unity.VisualScripting;
 
 
 public class InGameLoop : IStartable, ITickable
@@ -18,10 +19,12 @@ public class InGameLoop : IStartable, ITickable
     ScorePresenter _scorePresenter;
     CutInPresenter _cutInPresenter;
 
+    bool _selected = false;
     // フィーバ状態のFlg
     bool _isFever;
     public bool IsFever { get => _isFever; set => _isFever = value; }
 
+    GameObject[] _allCardObjects;
     // カードの組み合わせを記憶する配列
     GameObject[] _selectedCardCombination;
     public GameObject[] SelectedCardCombination { get => _selectedCardCombination; set => _selectedCardCombination = value; }
@@ -40,23 +43,24 @@ public class InGameLoop : IStartable, ITickable
 
     void IStartable.Start()
     {
-
+        _allCardObjects = _cardBehaviourSummary.configureAllCardCombination();
+        InitRegistAllCardObjects();
         _cardBehaviourSummary.configureCardCombination();
 
         _scorePresenter.ResetScore();
+
         (_isFever, _selectedCardCombination) = _cardBehaviourSummary.DecideTurn(IsFever, SelectedCardCombination);
 
         var a = "Change!!";
         _cutInPresenter.CutIn(a);
         //TurnLoopProcessing();
-
+        
     }
 
-    void ITickable.Tick()
+    async void ITickable.Tick()
     {
         _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
-        //カードポジションを裏面で0に集める
-        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
+        
 
         // await _card_FiveTimes.;
         //_cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
@@ -65,20 +69,15 @@ public class InGameLoop : IStartable, ITickable
             TurnLoopProcessing();
         }
 
+        // カードが選択された TO DO:↓メソッド化できない？　試したが、難しそう
+        await UniTask.WaitUntil(() => _selected);
 
-        //試しに一個とってみる
+        // 横カットイン
 
-        //, cancellationToken: cancellation
-        if (Input.GetMouseButtonUp(0))
-        {
-            anyClickedObject();// こっちはforeachしてるから複数個取れている？
-        }
+        //スコア加算
 
-        if (Input.GetMouseButtonUp(1))
-        {
-            Debug.Log($"ミギクリ！");
-            //これは一個だけ
-        }
+        //カードポジションを裏面で0に集める
+        //_cardBehaviourSummary.ResetCardPosion(_selectedCardCombination);
 
         //_selectedCardCombination.Up
 
@@ -102,31 +101,24 @@ public class InGameLoop : IStartable, ITickable
 
     }
 
-    private void anyClickedObject()
+    private void InitRegistAllCardObjects()
     {
-        foreach (GameObject i in _selectedCardCombination)
+        foreach (GameObject i in _allCardObjects)
         {
             var card = i.GetComponent<Card>();
 
-            card.OnMouseUpAsObservable().TakeLast(1)
+           var o = card.OnMouseUpAsObservable()
                 .Subscribe(_ =>
             {
                 Debug.Log($"{card.name}のクリック検知したヨ");
+                _selected = true;
             });
         }
 
-
-        /* for (int i = 0; i < _selectedCardCombination.Length; i++)
-         {
-             var a = _selectedCardCombination[i].GetComponent<Card>();
-
-             a.OnMouseUpAsObservable().Subscribe(_ =>
-             {
-                 Debug.Log($"{a.name}のクリック検知したヨ");
-             });
-         }*/
-
     }
+   
+
+
     /* partial async UniTaskVoid click() {
 
 
