@@ -44,12 +44,13 @@ public class InGameLoop : IStartable, ITickable
 
     void IStartable.Start()
     {
+        _gameOver = true;
         _allCardObjects = _cardBehaviourSummary.configureAllCardCombination();
         InitRegistAllCardObjects();
         _cardBehaviourSummary.configureCardCombination();
 
         _scorePresenter.ResetScore();
-
+        
     }
 
     async void ITickable.Tick()
@@ -57,18 +58,19 @@ public class InGameLoop : IStartable, ITickable
 
         if (_gameOver)
         {
+
             // ターンを決定
-            (_isFever, _selectedCardCombination) = _cardBehaviourSummary.DecideTurn(_isFever, SelectedCardCombination);
+            (_isFever, _selectedCardCombination) = await _cardBehaviourSummary.DecideTurn(_isFever, SelectedCardCombination);
 
 
-            var nowRoundText = SetRoundText();
+            var nowRoundText = await SetRoundText();
 
             //ターン通知カットイン
-            _cutInPresenter.CutIn(nowRoundText);
+            await _cutInPresenter.CutIn(nowRoundText);
 
             // 決定されたカードの組み合わせをシャッフル
-            _cardBehaviourSummary.CardShuffle(_selectedCardCombination);
-
+            await _cardBehaviourSummary.CardShuffle(_selectedCardCombination);
+                
             // シャッフルされたカードを配置
             _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination);
 
@@ -111,7 +113,7 @@ public class InGameLoop : IStartable, ITickable
     }
 
 
-    private string SetRoundText()
+    private async UniTask<string> SetRoundText()
     {
         if (_isFever)
         {

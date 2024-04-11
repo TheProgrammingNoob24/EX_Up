@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using VContainer;
+using Cysharp.Threading.Tasks;
 
 public class VerticalCutInPresenter
 {
@@ -17,7 +14,7 @@ public class VerticalCutInPresenter
         _cutInView = cutInView;
     }
 
-    public void CutIn(string changeText)
+    public async UniTask CutIn(string changeText)
     {
         _uiAnimation.CutInAnimation();
         _cutInView.UpdateText(changeText);

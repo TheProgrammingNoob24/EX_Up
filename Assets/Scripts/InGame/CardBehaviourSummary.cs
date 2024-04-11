@@ -5,6 +5,7 @@ using UnityEngine;
 using VContainer;
 using R3;
 using R3.Triggers;
+using Cysharp.Threading.Tasks;
 
 public class CardBehaviourSummary : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// </summary>
     public void configureCardCombination()
     {
-        
+
         // 各パターンの組み合わせを設定
         _twoCombinationType = new GameObject[] { _card_TwoTimes, _card_OneHalf };
         _threeCombinationType = new GameObject[] { _card_TwoTimes, _card_ThreeTimes, _card_OneHalf };
@@ -76,7 +77,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <summary>
     /// 現在のターン数を決定
     /// </summary>
-    public (bool, GameObject[]) DecideTurn(bool isFever, GameObject[] selectedCardCombination)
+    public async UniTask<(bool, GameObject[])> DecideTurn(bool isFever, GameObject[] selectedCardCombination)
     {
 
         // ランダムでフィーバータイムに突入するかを判定する
@@ -147,7 +148,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// カード配列の中身をシャッフル
     /// </summary>
     /// <param name="array"></param>
-    public GameObject[] CardShuffle(GameObject[] cardCombination)
+    public async UniTask<GameObject[]> CardShuffle(GameObject[] cardCombination)
     {
         System.Random rng = new System.Random();
         int n = cardCombination.Length;
