@@ -26,8 +26,9 @@ public class InGameLifetimeScope : LifetimeScope
         builder.RegisterComponentInNewPrefab(_card_OneThird, Lifetime.Scoped);
         builder.RegisterComponentInNewPrefab(_card_GameOver, Lifetime.Scoped);
 
-        builder.RegisterEntryPoint<InGameLoop>();
+        builder.RegisterEntryPoint<InGameLoop>(Lifetime.Singleton).AsSelf();
         builder.RegisterComponentInHierarchy<CardBehaviourSummary>().AsSelf();
+
 
         builder.Register<ScorePresenter>(Lifetime.Singleton).AsSelf();
         builder.Register<ScoreModel>(Lifetime.Singleton).AsSelf();
@@ -35,6 +36,6 @@ public class InGameLifetimeScope : LifetimeScope
 
         builder.Register<VerticalCutInPresenter>(Lifetime.Singleton).AsSelf();
         builder.RegisterComponentInHierarchy<VerticalCutInView>().AsSelf();
-        
+
     }
 }

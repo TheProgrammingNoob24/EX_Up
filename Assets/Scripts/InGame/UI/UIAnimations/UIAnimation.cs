@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using LitMotion;
 using LitMotion.Extensions;
 using TMPro;
+using System;
 
 public class UIAnimation : MonoBehaviour
 {
@@ -19,17 +20,18 @@ public class UIAnimation : MonoBehaviour
     /// <summary>
     /// カットイン演出
     /// </summary>
-    public void CutInAnimation()
+    public async UniTask CutInAnimation()
     {
+
         var rectTransform = _cutInImage.GetComponent<RectTransform>();
-        LMotion.Create(_initPosition, _stopPosition, 0.1f).BindToPosition(rectTransform);
+        await LMotion.Create(_initPosition, _stopPosition, 0.5f).BindToPosition(rectTransform);
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        rectTransform = _cutInImage.GetComponent<RectTransform>();
+        LMotion.Create(_stopPosition, _fadeOutPosition, 0.4f).BindToPosition(rectTransform);
+
     }
 
-    public void CutOutAnimation()
-    {
-        var transform = _cutInImage.GetComponent<RectTransform>();
-        LMotion.Create(_stopPosition, _fadeOutPosition, 0.1f).BindToPosition(transform);
-    }
+   
 
 
     public void Reset()

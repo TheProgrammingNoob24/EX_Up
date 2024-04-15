@@ -3,7 +3,14 @@ guid: 99b2b7583b7ce3c4c891c0dfb6bbe2dc
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _card_TwoTimes: {fileID: 919132149155446097, guid: 57e3e1371e5814e45bf485a2de67b090, type: 3}
+  - _card_ThreeTimes: {fileID: 919132149155446097, guid: dbfb83968ae1cdb4f901e9e8c8a76fb6, type: 3}
+  - _card_FiveTimes: {fileID: 919132149155446097, guid: cd95738b2b9bf10478fb927fd478cfd1, type: 3}
+  - _card_TenTimes: {fileID: 919132149155446097, guid: cc7261866b1e9904d8fb0604d788c792, type: 3}
+  - _card_OneHalf: {fileID: 919132149155446097, guid: 28b3c062ffeba5843ab1497e7f150124, type: 3}
+  - _card_OneThird: {fileID: 919132149155446097, guid: 7a8f2a493a98e2842b5dade427a85b38, type: 3}
+  - _card_GameOver: {fileID: 919132149155446097, guid: 033d3e3e8cebc694cbb6881fe9644f7a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

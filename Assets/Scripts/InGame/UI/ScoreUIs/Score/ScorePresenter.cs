@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VContainer.Unity;
+using System.Diagnostics;
+using Cysharp.Threading.Tasks;
 
 public class ScorePresenter
 {
@@ -19,7 +20,7 @@ public class ScorePresenter
         _scoreView = scoreView;
     }
 
-    public void UpdateScore(double UpdateScoreValue)
+    public async UniTask UpdateScore(double UpdateScoreValue)
     {
         _scoreModel.UpdateScore(UpdateScoreValue);
         _updatedScoreValue = _scoreModel.GetScoreValue();
@@ -33,4 +34,5 @@ public class ScorePresenter
         _scoreView.ReseScoreText(scoreValue);
 
     }
+
 }

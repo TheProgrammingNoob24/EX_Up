@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using System.Diagnostics;
+using UnityEngine;
 
 public class VerticalCutInPresenter
 {
@@ -16,8 +18,9 @@ public class VerticalCutInPresenter
 
     public async UniTask CutIn(string changeText)
     {
-        _uiAnimation.CutInAnimation();
+        await _uiAnimation.CutInAnimation();
+        //フィーバーの時演出を入れたい
         _cutInView.UpdateText(changeText);
-        _uiAnimation.CutOutAnimation();
+       
     }
 }

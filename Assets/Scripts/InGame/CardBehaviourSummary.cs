@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 public class CardBehaviourSummary : MonoBehaviour
 {
-
+    InGameLoop _inGameLoop;
     // カードオブジェクト群
     [SerializeField] private GameObject _card_TwoTimes;
     [SerializeField] private GameObject _card_ThreeTimes;
@@ -44,6 +44,8 @@ public class CardBehaviourSummary : MonoBehaviour
     private float center = Screen.width / Screen.height / 2f + 0.5f;
 
 
+    private bool _isAlignment;
+    private bool _isInitialSet;
     // 移動処理の共通変数
     // 目標値に到達するまでのおおよその時間[s]
     private float _smoothTime = 0.5f;
@@ -52,6 +54,8 @@ public class CardBehaviourSummary : MonoBehaviour
     // 現在速度(SmoothDampの計算のために必要)
     private Vector3 _currentVelocity = Vector3.zero;
 
+    public bool Alignment { get => _isAlignment; set => _isAlignment = value; }
+    public bool InitialSet { get => _isInitialSet; set => _isInitialSet = value; }
 
     public GameObject[] configureAllCardCombination()
     {
@@ -122,13 +126,11 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
     {
-        if (Random.value < 0.6f)
+        if (Random.value < 7.0f)
         {
-            //Debug.Log($" <color=cyan> あたり！</color>");
             return true;
         }
 
-        //Debug.Log($" <color=red> はずれ！</color>");
         return false;
     }
 
@@ -166,6 +168,7 @@ public class CardBehaviourSummary : MonoBehaviour
         return cardCombination;
     }
 
+
     /// <summary>
     /// アスペクト比を基準にカードを水平且つ均等に並べる
     /// </summary>
@@ -186,6 +189,7 @@ public class CardBehaviourSummary : MonoBehaviour
             // targetPosに居ない場合のみ移動処理
             if (nowPos != targetPosition)
             {
+                _isAlignment = true;
                 // オブジェクトを移動
                 cardCombination[i].transform.position =
                     Vector3.SmoothDamp(
@@ -197,8 +201,13 @@ public class CardBehaviourSummary : MonoBehaviour
                 cardCombination[i].transform.rotation = _frontRotation;
 
             }
+            else if (nowPos == targetPosition)
+            {
+                _isAlignment = false;
+            }
         }
     }
+
 
     /// <summary>
     /// カードを裏面状態で中央へ移動する center
@@ -216,6 +225,7 @@ public class CardBehaviourSummary : MonoBehaviour
             // targetPosに居ない場合のみ移動処理
             if (nowPos != targetPosition)
             {
+                _isInitialSet = true;
                 // オブジェクトを移動
                 cardCombination[i].transform.position =
                     Vector3.SmoothDamp(
@@ -226,6 +236,10 @@ public class CardBehaviourSummary : MonoBehaviour
                         _maxSpeed);
 
                 cardCombination[i].transform.rotation = _backRotation;
+            }
+            else if (nowPos == targetPosition)
+            {
+                _isInitialSet = false;
             }
         }
     }

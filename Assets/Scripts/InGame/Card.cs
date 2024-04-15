@@ -7,6 +7,8 @@ using VContainer.Unity;
 using VContainer;
 using LitMotion;
 using LitMotion.Extensions;
+using Unity.VisualScripting;
+using System.Drawing;
 
 public class Card : MonoBehaviour, ICard, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
 {
@@ -14,7 +16,7 @@ public class Card : MonoBehaviour, ICard, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private double _multipleScoreValue;
     public double UpdateScoreValue { get => _multipleScoreValue; }
 
-    ScorePresenter _scorePresenter;
+    InGameLoop _inGameLoop;
 
     Quaternion _shakeAnimationRoteto = Quaternion.Euler(70, -90, 90);
     Quaternion _shakeAnimationRotetoReset = Quaternion.Euler(90, -90, 90);
@@ -24,10 +26,10 @@ public class Card : MonoBehaviour, ICard, IPointerEnterHandler, IPointerExitHand
 
     [Inject]
     public void Inject(
-        ScorePresenter scorePresenter
+        InGameLoop inGameLoop
         )
     {
-        _scorePresenter = scorePresenter;
+        _inGameLoop = inGameLoop;
     }
 
 
@@ -64,7 +66,11 @@ public class Card : MonoBehaviour, ICard, IPointerEnterHandler, IPointerExitHand
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
         OnPointerUpCardAnimation();
-        _scorePresenter.UpdateScore(UpdateScoreValue);
+        
+        _inGameLoop.UpdateScoreValue = _multipleScoreValue;
+        _inGameLoop.CardSelected = true;
+        //Debug.Log($"<color=blue>{_inGameLoop.UpdateScoreValue}</color>");
+
     }
 
     private void OnPointerUpCardAnimation()
