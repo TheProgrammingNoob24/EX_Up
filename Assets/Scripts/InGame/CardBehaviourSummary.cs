@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 public class CardBehaviourSummary : MonoBehaviour
 {
-    InGameLoop _inGameLoop;
+
     // カードオブジェクト群
     [SerializeField] private GameObject _card_TwoTimes;
     [SerializeField] private GameObject _card_ThreeTimes;
@@ -33,6 +33,9 @@ public class CardBehaviourSummary : MonoBehaviour
     // 周期に関する変数
     private int[] _sequenceCycle = { 2, 3, 4, 5, 4, 3 };
     private int _sequencePointer = 0;
+
+    Vector3 _appearPosition = new Vector3(-0.962395608f, 27.3865585f, -7.06599998f);
+    Vector3 _hidePosition = new Vector3(-0.962395608f, 27.3865585f, -4);
 
     // 整列を行うときのオブジェクトの向き
     private Quaternion _frontRotation = Quaternion.Euler(90, 0, -180);
@@ -67,7 +70,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <summary>
     /// 各パターンのコンビネーションを設定
     /// </summary>
-    public void configureCardCombination()
+    public void ConfigureCardCombination()
     {
 
         // 各パターンの組み合わせを設定
@@ -126,7 +129,7 @@ public class CardBehaviourSummary : MonoBehaviour
     /// <returns>フィーバータイムか否か</returns>
     private bool IsFever()
     {
-        if (Random.value < 7.0f)
+        if (Random.value < 0.1f)
         {
             return true;
         }
@@ -168,7 +171,6 @@ public class CardBehaviourSummary : MonoBehaviour
         return cardCombination;
     }
 
-
     /// <summary>
     /// アスペクト比を基準にカードを水平且つ均等に並べる
     /// </summary>
@@ -208,9 +210,8 @@ public class CardBehaviourSummary : MonoBehaviour
         }
     }
 
-
     /// <summary>
-    /// カードを裏面状態で中央へ移動する center
+    /// カードを裏面状態で中央へ移動する
     /// </summary>
     public void ResetCardPosion(GameObject[] cardCombination)
     {
@@ -243,6 +244,28 @@ public class CardBehaviourSummary : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// ボード裏のカードオブジェクトを出現させる
+    /// </summary>
+    public void AppearCardObjects()
+    {
+
+    }
+
+    /// <summary>
+    /// カードオブジェクトをボード裏に隠す
+    /// </summary>
+    public void HideCardObjects(GameObject[] HideObjects)
+    {
+        foreach (GameObject obj in HideObjects)
+        {
+            var oldPos = obj.GetComponent<Transform>();
+            oldPos.position = _hidePosition;
+            Debug.Log($"{obj.name}hideした POS{oldPos.position}");
+        }
+    }
+
 }
 
 

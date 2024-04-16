@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ using Unity.VisualScripting;
 using Cysharp.Threading.Tasks.Triggers;
 using Cysharp.Threading.Tasks.Linq;
 using Palmmedia.ReportGenerator.Core.Parser.Analysis;
+using System.ComponentModel;
 
 
 public class InGameLoop : IStartable, ITickable
@@ -23,13 +25,13 @@ public class InGameLoop : IStartable, ITickable
     VerticalCutInPresenter _cutInPresenter;
 
     bool _gameOver;
-    bool _cardSelected = false;
+    bool _isTurnEnd = true;
     bool _isFever;
-    bool _isTurnEnd = false;
-    // public bool _isAlignment = false;
-    // public bool _isInitialSet = false;
+    bool _cardSelected = false;
+    public bool CardSelected { get => _cardSelected; set => _cardSelected = value; }
 
-    string _nowRoundCount;
+
+    int _nowRoundCount = 1;
     double _updateScoreValue;
     public double UpdateScoreValue { get => _updateScoreValue; set => _updateScoreValue = value; }
 
@@ -37,7 +39,8 @@ public class InGameLoop : IStartable, ITickable
     // カードの組み合わせを記憶する配列
     GameObject[] _selectedCardCombination;
     public GameObject[] SelectedCardCombination { get => _selectedCardCombination; set => _selectedCardCombination = value; }
-    public bool CardSelected { get => _cardSelected; set => _cardSelected = value; }
+
+    GameObject[] _unselectedObjects;
 
     [Inject]
     public InGameLoop(
@@ -54,59 +57,67 @@ public class InGameLoop : IStartable, ITickable
     async void IStartable.Start()
     {
 
-        _gameOver = false;
+        // FIX:要らないかも
         _allCardObjects = _cardBehaviourSummary.configureAllCardCombination();
-        _cardBehaviourSummary.configureCardCombination();
+        _cardBehaviourSummary.ConfigureCardCombination();
 
         _scorePresenter.ResetScore();
 
-        //
-        _isTurnEnd = false;
+        // 以下リセット処理で囲う
+        _gameOver = false;
 
         while (!_gameOver)
         {
-
-            _isTurnEnd = false;
-
-            Debug.Log($"_gameOverじゃないよ");
-
-            while (!_isTurnEnd)
+            if (_isTurnEnd)
             {
-               /* if (!_cardBehaviourSummary.InitialSet) 
-                { 
-                    _isTurnEnd = true; 
-                    Debug.Log($"TurnEnd0");
-                    
-                }*/
-                //_cardBehaviourSummary.InitialSet = false;
+                _isTurnEnd = false;
+                // 隠されているオブジェクトを戻す
                 await TurnLoopProcess();
-                //_isTurnEnd = true;
+            }
+
+            // カードのポジションもリセットされてからターンを終了
+            if (!_isTurnEnd && _cardBehaviourSummary.InitialSet)
+            {
+                // InitialSet(初期位置)に配置されたらオブジェクトを隠す
+                
+
+                //カードをボードの裏に隠す
+                //_cardBehaviourSummary.HideCardObjects(_unselectedObjects);
+
+                _isTurnEnd = true;
             }
         }
     }
 
-    async void ITickable.Tick()
+
+    void ITickable.Tick()
     {
 
         if (_gameOver) { return; }
 
+        // Vector3.SmoothDampを使用しているのでTick()に記述
         if (_cardBehaviourSummary.Alignment) { _cardBehaviourSummary.EvenlyArrange(_selectedCardCombination); }
         if (_cardBehaviourSummary.InitialSet) { _cardBehaviourSummary.ResetCardPosion(_selectedCardCombination); }
-
-
 
     }
 
     private async UniTask TurnLoopProcess()
     {
 
-        // ターンを決定
+        // 現在のターンと抽選で決定されたカードの組み合わせを受け取る
         (_isFever, _selectedCardCombination) = await _cardBehaviourSummary.DecideTurn(_isFever, SelectedCardCombination);
 
-        // 現在のターンを設定
+        Debug.Log("1");
+        // 抽選で選ばれていないオブジェクトを探索
+        _unselectedObjects = CheckUnselectedObjects(_allCardObjects, _selectedCardCombination);
+
+        //カードをボードの裏に隠す(非表示にする)
+        _cardBehaviourSummary.HideCardObjects(_unselectedObjects);
+
+        // カットインUIに現在のターン表記をセット
         var nowRoundText = await SetRoundText();
 
-        //ターン通知カットイン
+        // ターン通知カットイン
         await _cutInPresenter.CutIn(nowRoundText);
 
         // 決定されたカードの組み合わせをシャッフル
@@ -117,27 +128,31 @@ public class InGameLoop : IStartable, ITickable
 
         // カードが選択された
         await UniTask.WaitUntil(() => _cardSelected);
+        Debug.Log("2");
+        // カードが加算されたら配置FlgをOFF
+        _cardBehaviourSummary.Alignment = false;
 
         // GameOverカードが選択されたか
         if (IsGameOver()) { GameOverProcess(); }
+
         // 横カットイン
 
         // _updateScoreValueが変更されることにより、GameOver以外のいずれかのカードが選択されたとみなす
         await UniTask.WaitUntil(() => _updateScoreValue != 0);
 
-        // スコア加算　
+        // スコア加算
         await _scorePresenter.UpdateScore(_updateScoreValue);
 
-        _cardBehaviourSummary.Alignment = false;
+        // --- 1ターンに行う処理が終了--- //
 
-        // カードポジションを裏面で0に集める
+        // カードポジションを裏面で0に集める為のフラグをON
         _cardBehaviourSummary.InitialSet = true;
+        Debug.Log("3");
+        /*//カードをボードの裏に隠す(非表示にする)
+        _cardBehaviourSummary.HideCardObjects(_unselectedObjects);*/
 
-
-        //
-        // if (!_cardBehaviourSummary.InitialSet) { _isTurnEnd = true; Debug.Log($"TurnEnd1"); }
-        _isTurnEnd = true;
-        Debug.Log($"<color=yellow>さいご</color>");
+        // 選択済みフラグをOFF
+        _cardSelected = false;
 
     }
 
@@ -157,6 +172,24 @@ public class InGameLoop : IStartable, ITickable
         Debug.Log($"<color=cyan>GO</color>");
     }
 
+
+    /// <summary>
+    /// 抽選から外れたカードを記録するために、ゲーム上にある"すべてのカード"と"抽選で当たったカード"をNANDする
+    /// </summary>
+    /// <param name="allCardObjects">すべてのカードを記録している配列</param>
+    /// <param name="selectedCardCombination">今回の抽選で当たったカードを記録した配列</param>
+    /// <returns></returns>
+    private GameObject[] CheckUnselectedObjects(GameObject[] allCardObjects, GameObject[] selectedCardCombination)
+    {
+        var unselectedSelectedObjects = allCardObjects.Except(selectedCardCombination).ToArray();
+
+        foreach (var obj in unselectedSelectedObjects) 
+        {
+            Debug.Log($"選ばれてないやつの中身{obj.name}");
+        }
+        return unselectedSelectedObjects;
+    }
+
     private async UniTask<string> SetRoundText()
     {
         if (_isFever)
@@ -164,12 +197,10 @@ public class InGameLoop : IStartable, ITickable
             return "Fever!";
         }
 
-        return "Round" + _nowRoundCount;
-    }
+        var _nowRoundText = "ROUND" + _nowRoundCount.ToSafeString();
 
-    public void Dispose()
-    {
-        _disposable?.Dispose();
-        _cancellationTokenSource?.Dispose();
+        _nowRoundCount++;
+
+        return _nowRoundText;
     }
 }

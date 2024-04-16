@@ -31,9 +31,6 @@ public class UIAnimation : MonoBehaviour
 
     }
 
-   
-
-
     public void Reset()
     {
         var rectTransform = _cutInImage.GetComponent<RectTransform>();

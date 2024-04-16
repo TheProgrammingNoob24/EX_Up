@@ -220,6 +220,7 @@ MonoBehaviour:
   - {fileID: 966202491}
   - {fileID: 1735014005}
   _uiAnimation: {fileID: 483961270}
+  _cardBehaviourSummary: {fileID: 0}
   _card_TwoTimes: {fileID: 626997504}
   _card_ThreeTimes: {fileID: 619367649}
   _card_FiveTimes: {fileID: 1767339108}
